@@ -36,6 +36,7 @@ BTW: 之前写过一个[从酷狗和网易音乐提取缓存文件的程序](htt
 
 ## 下载程序
 
+https://github.com/jadepeng/XMusicDownloader/releases
 
 ## 实现方案介绍
 

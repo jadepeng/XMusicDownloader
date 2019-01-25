@@ -120,8 +120,8 @@ namespace XMusicDownloader
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = item.name;
-                lvi.SubItems.Add(item.rate + "kb");
                 lvi.SubItems.Add(item.singer);
+                lvi.SubItems.Add(item.rate + "kb");
                 lvi.SubItems.Add((item.size / (1024 * 1024)).ToString("F2") + "MB");  //将文件大小装换成MB的单位
                 TimeSpan ts = new TimeSpan(0, 0, (int)item.duration); //把秒数换算成分钟数
                 lvi.SubItems.Add(ts.Minutes + ":" + ts.Seconds.ToString("00"));

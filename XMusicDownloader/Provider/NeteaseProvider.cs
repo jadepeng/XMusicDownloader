@@ -52,7 +52,7 @@ namespace XMusicDownloader.Provider
                         index = index++,
                         //size = (double)songItem["FileSize"],
                         source = Name,
-                        duration = (double)songItem["dt"]
+                        duration = (double)songItem["dt"]/ 1000
                     };
 
                     song.singer = "";
