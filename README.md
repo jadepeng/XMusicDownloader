@@ -339,4 +339,5 @@ public class SongItemDownloader
 
 ## 参考
 
+- 程序界面，使用了https://github.com/Gsangu/KugouDownloader代码
 - 搜索和下载方案参考 https://github.com/0xHJK/music-dl
