@@ -32,7 +32,7 @@ BTW: 之前写过一个[从酷狗和网易音乐提取缓存文件的程序](htt
 
 ## 界面截图
 
-![预览](https://www.github.com/jadepeng/blogpic/raw/master/images/2019/1-25/1548428412696.png)
+![预览](https://www.github.com/jadepeng/blogpic/raw/master/images/2019/1-25/1548431781568.png)
 
 ## 下载程序
 
