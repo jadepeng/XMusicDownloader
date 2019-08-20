@@ -55,6 +55,8 @@ namespace XMusicDownloader.Provider
 
         }
 
+        // https://music.163.com/#/artist?id=10559
+
         public bool Support(string url)
         {
             if (url == null)
@@ -67,7 +69,7 @@ namespace XMusicDownloader.Provider
                 return false;
             }
 
-            return url.StartsWith("https://music.163.com/#/playlist?id=") || url.StartsWith("https://music.163.com/#/album?id=");
+            return url.StartsWith("https://music.163.com/#/playlist?id=") || url.StartsWith("https://music.163.com/#/album?id=") || url.StartsWith("https://music.163.com/#/artist?id=");
         }
 
         Regex regex = new Regex("id=(\\d+)");
@@ -84,14 +86,34 @@ namespace XMusicDownloader.Provider
             {
                 GetSongListDetail(id, result);
             }
-            else
+            else if(url.StartsWith("https://music.163.com/#/album?id="))
             {
                 GetAlbum(id, result);
+            }
+            else
+            {
+                GetSinger(id, result);
             }
 
 
             return result;
 
+        }
+
+        private void GetSinger(string id, List<Song> result)
+        {
+            var requestUrl = "https://v1.itooi.cn/netease/song/artist?id=" + id + "&pageSize=200";
+            var searchResult = HttpHelper.GET(requestUrl, DEFAULT_CONFIG);
+
+            var songList = JObject.Parse(searchResult)["data"];
+            var index = 1;
+
+            foreach (var songItem in songList)
+            {
+                Song song = extractSong(ref index, songItem);
+                result.Add(song);
+
+            }
         }
 
         private void GetAlbum(string id, List<Song> result)

@@ -32,7 +32,7 @@ namespace XMusicDownloader
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox2.Text = target;
-            this.cbRate.SelectedIndex = 0;
+            this.cbRate.SelectedIndex = 2;
         }
 
         //浏览
@@ -271,6 +271,14 @@ namespace XMusicDownloader
         private void btnGetSongList_Click(object sender, EventArgs e)
         {
             GetList(1);
+        }
+
+        private void cbSelectAll_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in resultListView.Items)
+            {
+                item.Checked = cbSelectAll.Checked;
+            }
         }
     }
 }

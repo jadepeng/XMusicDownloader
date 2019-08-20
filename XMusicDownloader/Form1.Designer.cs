@@ -56,6 +56,8 @@
             this.btnGetSongList = new CCWin.SkinControl.SkinButton();
             this.label2 = new System.Windows.Forms.Label();
             this.cbRate = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbSelectAll = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.tblSearch.SuspendLayout();
             this.tabKeyword.SuspendLayout();
@@ -320,7 +322,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(775, 37);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "歌单&专辑下载";
+            this.tabPage2.Text = "歌单&专辑&歌手歌曲";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // txtSongListUrl
@@ -331,7 +333,7 @@
             this.txtSongListUrl.Name = "txtSongListUrl";
             this.txtSongListUrl.Size = new System.Drawing.Size(452, 26);
             this.txtSongListUrl.TabIndex = 10;
-            this.txtSongListUrl.Text = "https://music.163.com/#/album?id=34749138";
+            this.txtSongListUrl.Text = "https://y.qq.com/n/yqq/singer/0025NhlN2yWrP4.html";
             // 
             // btnGetSongList
             // 
@@ -358,7 +360,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(7, 546);
+            this.label2.Location = new System.Drawing.Point(4, 541);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 20);
@@ -377,6 +379,26 @@
             this.cbRate.Size = new System.Drawing.Size(121, 25);
             this.cbRate.TabIndex = 20;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(204, 545);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(224, 17);
+            this.label3.TabIndex = 21;
+            this.label3.Text = "如果最大音质获取出错则自动转其他音质";
+            // 
+            // cbSelectAll
+            // 
+            this.cbSelectAll.AutoSize = true;
+            this.cbSelectAll.Location = new System.Drawing.Point(461, 543);
+            this.cbSelectAll.Name = "cbSelectAll";
+            this.cbSelectAll.Size = new System.Drawing.Size(51, 21);
+            this.cbSelectAll.TabIndex = 22;
+            this.cbSelectAll.Text = "全选";
+            this.cbSelectAll.UseVisualStyleBackColor = true;
+            this.cbSelectAll.CheckedChanged += new System.EventHandler(this.cbSelectAll_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -385,6 +407,8 @@
             this.CaptionHeight = 20;
             this.ClientSize = new System.Drawing.Size(800, 639);
             this.CloseBoxSize = new System.Drawing.Size(40, 20);
+            this.Controls.Add(this.cbSelectAll);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.cbRate);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tblSearch);
@@ -455,6 +479,8 @@
         private CCWin.SkinControl.SkinButton btnGetSongList;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbRate;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox cbSelectAll;
     }
 }
 
