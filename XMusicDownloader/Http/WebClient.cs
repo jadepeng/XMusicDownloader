@@ -287,7 +287,7 @@ namespace XMusicDownloader.Http
         {
             requestHeaders.Add("Connection", "close");
             SendRequestData(URL, "GET");
-            if (URL.ToLower().EndsWith("flac"))
+            if (URL.ToLower().Contains(".flac"))
             {
                 fileName = fileName.Replace(".mp3", ".flac");
             }

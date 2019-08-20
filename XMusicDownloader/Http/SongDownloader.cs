@@ -27,7 +27,8 @@ namespace XMusicDownloader.Http
         MusicProviders musicProviders;
         string target;
         List<SongItemDownloader> songs = new List<SongItemDownloader>();
-
+        Queue<MergedSong> queqes = new Queue<MergedSong>();
+        int max_downloading_size = 3;
 
         public double totalPercent
         {
@@ -52,9 +53,31 @@ namespace XMusicDownloader.Http
             }
         }
 
+        public int queqeCount
+        {
+            get
+            {
+                return this.queqes.Count;
+            }
+        }
+
+        public string currentSongName
+        {
+            get
+            {
+                return string.Join(",", songs.Select(s => s.songName).ToList());
+            }
+        }
+
 
         public void AddDownload(MergedSong song)
         {
+            if (songs.Count >= max_downloading_size)
+            {
+                queqes.Enqueue(song);
+                return;
+            }
+
             SongItemDownloader downloader = new SongItemDownloader(musicProviders, target, song, rate);
             downloader.DownloadFinish += Downloader_DownloadFinish;
 
@@ -67,6 +90,11 @@ namespace XMusicDownloader.Http
         private void Downloader_DownloadFinish(object sender, SongItemDownloader e)
         {
             songs.Remove(e);
+            if (songs.Count < max_downloading_size)
+            {
+                MergedSong song = queqes.Dequeue();
+                AddDownload(song);
+            }
         }
 
 
@@ -84,9 +112,18 @@ namespace XMusicDownloader.Http
         MergedSong song;
         string rate = "320";
 
+        public string songName
+        {
+            get
+            {
+                return song.name;
+            }
+        }
+
+
         public event DownloadFinishEvent DownloadFinish;
 
-        public SongItemDownloader(MusicProviders musicProviders, string target, MergedSong song,string rate)
+        public SongItemDownloader(MusicProviders musicProviders, string target, MergedSong song, string rate)
         {
             this.musicProviders = musicProviders;
             this.target = target;
@@ -117,15 +154,15 @@ namespace XMusicDownloader.Http
                     try
                     {
                         client.DownloadFile(musicProviders.getDownloadUrl(item, rate), target + "\\" + item.getFileName());
-                        DownloadFinish?.Invoke(this, this);
                         break;
 
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
-                       Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Message);
                     }
                 }
+                DownloadFinish?.Invoke(this, this);
 
             }).Start();
         }

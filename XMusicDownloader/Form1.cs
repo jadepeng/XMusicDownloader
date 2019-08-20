@@ -113,11 +113,9 @@ namespace XMusicDownloader
             resultListView.Items.Clear();
             toolStripStatusLabel1.Text = "搜索中...";
             List<ListViewItem> listViewItems = new List<ListViewItem>();
-          
 
 
-
-            var songs = tblSearch.SelectedIndex==0 ? provider.SearchSongs(textBox1.Text, page, 20): provider.SearchSongsList(txtSongListUrl.Text);
+            var songs = tblSearch.SelectedIndex == 0 ? provider.SearchSongs(textBox1.Text, page, 20) : provider.SearchSongsList(txtSongListUrl.Text);
 
             songs.ForEach(item =>
             {
@@ -135,6 +133,11 @@ namespace XMusicDownloader
 
 
             UpdateUI(listViewItems);
+
+            if(songs.Count == 0)
+            {
+                toolStripStatusLabel1.Text = "未找到记录";
+            }
 
         }
 
@@ -251,9 +254,7 @@ namespace XMusicDownloader
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-
-
-            toolStripStatusLabel1.Text = "下载进度：" + (int)(downloader.totalPercent) + "%" + string.Format("，速度{0}", (downloader.totalSpeed / 1024.0 / 1024.0).ToString("F2") + "MB/s");
+            toolStripStatusLabel1.Text = "当前下载："+downloader.currentSongName+" 下载进度：" + (int)(downloader.totalPercent) + "%" + string.Format(" 下载速度：{0}", (downloader.totalSpeed / 1024.0 / 1024.0).ToString("F2") + "MB/s 排队数:" + downloader.queqeCount);
             toolStripProgressBar1.Value = (int)(downloader.totalPercent);
             if (downloader.totalPercent >= 100d)
             {
