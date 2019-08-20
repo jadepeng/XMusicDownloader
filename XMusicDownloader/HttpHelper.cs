@@ -37,6 +37,22 @@ namespace XMusicDownloader
             return Send(url, "GET", null, config);
         }
 
+        public static string DetectLocationUrl(string url, HttpConfig config)
+        {
+            if (config == null) config = new HttpConfig();
+            using (HttpWebResponse response = GetResponse(url, "GET", null, config))
+            {
+                string detectUrl =  response.GetResponseHeader("Location");
+                if(detectUrl.Length == 0)
+                {
+                    return url;
+                }
+                // 递归获取
+                return DetectLocationUrl(detectUrl, config);
+            }
+        }
+
+
         public static string POST(string url, string data, HttpConfig config)
         {
             return Send(url, "POST", data, config);
@@ -176,6 +192,7 @@ namespace XMusicDownloader
             request.Headers.Set("Accept-Encoding", config.AcceptEncoding);
             request.ContentType = config.ContentType;
             request.KeepAlive = config.KeepAlive;
+            request.AllowAutoRedirect = false;
 
             if (url.ToLower().StartsWith("https"))
             {

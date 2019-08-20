@@ -32,6 +32,7 @@ namespace XMusicDownloader
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox2.Text = target;
+            this.cbRate.SelectedIndex = 0;
         }
 
         //浏览
@@ -112,9 +113,11 @@ namespace XMusicDownloader
             resultListView.Items.Clear();
             toolStripStatusLabel1.Text = "搜索中...";
             List<ListViewItem> listViewItems = new List<ListViewItem>();
+          
 
 
-            var songs = provider.SearchSongs(textBox1.Text, page, 20);
+
+            var songs = tblSearch.SelectedIndex==0 ? provider.SearchSongs(textBox1.Text, page, 20): provider.SearchSongsList(txtSongListUrl.Text);
 
             songs.ForEach(item =>
             {
@@ -128,7 +131,6 @@ namespace XMusicDownloader
                 lvi.SubItems.Add(item.source);
                 lvi.Tag = item;
                 listViewItems.Add(lvi);
-
             });
 
 
@@ -164,9 +166,16 @@ namespace XMusicDownloader
                 toolStripStatusLabel1.Text = "搜索完成";
                 StopProcessBar();
 
-                if (resultListView.Items.Count > 0)
+                if (tblSearch.SelectedIndex == 0)
                 {
-                    nextPageBtn.Enabled = true;
+                    if (resultListView.Items.Count > 0)
+                    {
+                        nextPageBtn.Enabled = true;
+                    }
+                    else
+                    {
+                        nextPageBtn.Enabled = false;
+                    }
                 }
                 else
                 {
@@ -223,6 +232,7 @@ namespace XMusicDownloader
                 {
                     downloader = new SongDownloader(provider, target);
                 }
+                downloader.rate = this.cbRate.SelectedItem.ToString();
 
                 foreach (ListViewItem item in resultListView.CheckedItems)
                 {
@@ -256,6 +266,11 @@ namespace XMusicDownloader
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnGetSongList_Click(object sender, EventArgs e)
+        {
+            GetList(1);
         }
     }
 }

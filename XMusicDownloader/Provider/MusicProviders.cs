@@ -40,6 +40,10 @@ namespace XMusicDownloader.Provider
             return type2Provider[song.source].getDownloadUrl(song);
         }
 
+        public string getDownloadUrl(Song song,string rate)
+        {
+            return type2Provider[song.source].getDownloadUrl(song.id,rate);
+        }
 
         public List<MergedSong> SearchSongs(string keyword, int page, int pageSize)
         {
@@ -54,6 +58,25 @@ namespace XMusicDownloader.Provider
 
             return songs.GroupBy(s => s.getMergedKey()).Select(g => new MergedSong(g.ToList())).OrderByDescending(s => s.score).ToList();
         }
+
+
+        public List<MergedSong> SearchSongsList(string url)
+        {
+            var songs = new List<Song>();
+            Providers.AsParallel().ForAll(provider =>
+            {
+                if (provider.Support(url)) {
+                    var currentSongs = provider.GetSongList(url);
+                    songs.AddRange(currentSongs);
+                }  
+            });
+
+            // merge
+
+            return songs.GroupBy(s => s.getMergedKey()).Select(g => new MergedSong(g.ToList())).OrderByDescending(s => s.score).ToList();
+        }
+
+
 
         static class Holder
         {

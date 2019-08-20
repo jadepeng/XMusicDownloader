@@ -12,6 +12,11 @@ namespace XMusicDownloader.Http
 
     public class SongDownloader
     {
+        public string rate
+        {
+            get;
+            set;
+        } = "320";
 
         public SongDownloader(MusicProviders musicProviders, string target)
         {
@@ -50,7 +55,7 @@ namespace XMusicDownloader.Http
 
         public void AddDownload(MergedSong song)
         {
-            SongItemDownloader downloader = new SongItemDownloader(musicProviders, target, song);
+            SongItemDownloader downloader = new SongItemDownloader(musicProviders, target, song, rate);
             downloader.DownloadFinish += Downloader_DownloadFinish;
 
             songs.Add(downloader);
@@ -77,14 +82,16 @@ namespace XMusicDownloader.Http
         MusicProviders musicProviders;
         string target;
         MergedSong song;
+        string rate = "320";
 
         public event DownloadFinishEvent DownloadFinish;
 
-        public SongItemDownloader(MusicProviders musicProviders, string target, MergedSong song)
+        public SongItemDownloader(MusicProviders musicProviders, string target, MergedSong song,string rate)
         {
             this.musicProviders = musicProviders;
             this.target = target;
             this.song = song;
+            this.rate = rate;
         }
 
         public long totalBytes;
@@ -109,13 +116,14 @@ namespace XMusicDownloader.Http
                 {
                     try
                     {
-                        client.DownloadFile(musicProviders.getDownloadUrl(item), target + "\\" + item.getFileName());
+                        client.DownloadFile(musicProviders.getDownloadUrl(item, rate), target + "\\" + item.getFileName());
                         DownloadFinish?.Invoke(this, this);
                         break;
 
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                       Console.WriteLine(ex.Message);
                     }
                 }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -286,27 +287,54 @@ namespace XMusicDownloader.Http
         {
             requestHeaders.Add("Connection", "close");
             SendRequestData(URL, "GET");
+            if (URL.ToLower().EndsWith("flac"))
+            {
+                fileName = fileName.Replace(".mp3", ".flac");
+            }
             FileStream fs2 = new FileStream(fileName, FileMode.Create);
             SaveNetworkStream(fs2, true);
             fs2.Close();
             fs2 = null;
         }
 
+        public static bool ValidateServerCertificate(object sender, X509Certificate certificate,
+X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        }
+
+        bool isSSL = false;
+        Stream workStream;
+
         private void SendRequestData(string URL, string method, bool showProgress)
         {
+            isSSL = URL.StartsWith("https");
             clientSocket = new TcpClient();
             Uri URI = new Uri(URL);
-            clientSocket.Connect(URI.Host, URI.Port);
+            clientSocket.Connect(URI.Host, isSSL ? 443 : URI.Port);
             requestHeaders.Add("Host", URI.Host);
+
+            Stream networkStream = clientSocket.GetStream();
+            workStream = isSSL ? new SslStream(networkStream, false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null) : networkStream;
             byte[] request = GetRequestHeaders(method + " " + URI.PathAndQuery + " HTTP/1.1");
-            clientSocket.Client.Send(request);
+
+            if (!isSSL) {
+                clientSocket.Client.Send(request);
+            }
+            else
+            {
+                ((SslStream)workStream).AuthenticateAsClient(URI.Host);
+                workStream.Write(request, 0, request.Length);
+                workStream.Flush();
+            }
+
             if (postStream == null)
             {
                 return;
             }
             byte[] buffer = new byte[10245];
             int count2 = 0;
-            Stream sm = clientSocket.GetStream();
+
             postStream.Position = 0L;
             UploadEventArgs e = default(UploadEventArgs);
             e.totalBytes = postStream.Length;
@@ -315,7 +343,7 @@ namespace XMusicDownloader.Http
             while (!isCanceled)
             {
                 count2 = postStream.Read(buffer, 0, buffer.Length);
-                sm.Write(buffer, 0, count2);
+                workStream.Write(buffer, 0, count2);
                 if (showProgress)
                 {
                     e.bytesSent += count2;
@@ -373,19 +401,19 @@ namespace XMusicDownloader.Http
 
         private void SaveNetworkStream(Stream toStream, bool showProgress)
         {
-            NetworkStream NetStream = clientSocket.GetStream();
-            byte[] buffer2 = new byte[10245];
+
+            byte[] buffer2 = new byte[10240];
             int count4 = 0;
             int startIndex = 0;
             MemoryStream ms = new MemoryStream();
             for (int i = 0; i < 3; i++)
             {
-                count4 = NetStream.Read(buffer2, 0, 500);
+                count4 = workStream.Read(buffer2, 0, 500);
                 ms.Write(buffer2, 0, count4);
             }
             if (ms.Length == 0)
             {
-                NetStream.Close();
+                workStream.Close();
                 throw new Exception("远程服务器没有响应");
             }
             buffer2 = ms.GetBuffer();
@@ -421,7 +449,7 @@ namespace XMusicDownloader.Http
                         this.DownloadProgressChanged(this, e);
                     }
                 }
-                count4 = NetStream.Read(buffer2, 0, buffer2.Length);
+                count4 = workStream.Read(buffer2, 0, buffer2.Length);
                 toStream.Write(buffer2, 0, count4);
                 if (count4 <= 0)
                 {
@@ -434,7 +462,7 @@ namespace XMusicDownloader.Http
                 toStream.SetLength(long.Parse(responseHeaders["Content-Length"]));
             }
             toStream.Position = 0L;
-            NetStream.Close();
+            workStream.Close();
             clientSocket.Close();
         }
 

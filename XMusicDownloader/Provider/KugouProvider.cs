@@ -64,5 +64,20 @@ namespace XMusicDownloader.Provider
 
         }
 
+        public bool Support(string url)
+        {
+            return false;
+        }
+
+        public List<Song> GetSongList(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getDownloadUrl(string id, string rate)
+        {
+            return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/kugou/url?id=" + id + "&quality=" + rate,DEFAULT_CONFIG);
+        }
+
     }
 }

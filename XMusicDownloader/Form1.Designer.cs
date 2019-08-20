@@ -49,13 +49,23 @@
             this.lastPageBtn = new CCWin.SkinControl.SkinButton();
             this.nextPageBtn = new CCWin.SkinControl.SkinButton();
             this.pageNum = new System.Windows.Forms.Label();
+            this.tblSearch = new System.Windows.Forms.TabControl();
+            this.tabKeyword = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtSongListUrl = new System.Windows.Forms.TextBox();
+            this.btnGetSongList = new CCWin.SkinControl.SkinButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbRate = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
+            this.tblSearch.SuspendLayout();
+            this.tabKeyword.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(8, 35);
+            this.textBox1.Location = new System.Drawing.Point(4, 3);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(452, 26);
@@ -66,7 +76,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(6, 546);
+            this.label1.Location = new System.Drawing.Point(21, 580);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 20);
@@ -77,7 +87,7 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox2.Location = new System.Drawing.Point(10, 579);
+            this.textBox2.Location = new System.Drawing.Point(77, 577);
             this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(417, 26);
@@ -95,7 +105,7 @@
             this.searchBtn.DownBack = null;
             this.searchBtn.DownBaseColor = System.Drawing.Color.Gainsboro;
             this.searchBtn.GlowColor = System.Drawing.Color.LightBlue;
-            this.searchBtn.Location = new System.Drawing.Point(466, 35);
+            this.searchBtn.Location = new System.Drawing.Point(471, 4);
             this.searchBtn.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.searchBtn.MouseBack = null;
             this.searchBtn.MouseBaseColor = System.Drawing.Color.LightBlue;
@@ -115,7 +125,7 @@
             this.downBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.downBtn.DownBack = null;
             this.downBtn.DownBaseColor = System.Drawing.Color.LightBlue;
-            this.downBtn.Location = new System.Drawing.Point(541, 570);
+            this.downBtn.Location = new System.Drawing.Point(606, 574);
             this.downBtn.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.downBtn.MouseBack = null;
             this.downBtn.MouseBaseColor = System.Drawing.Color.LightBlue;
@@ -135,7 +145,7 @@
             this.pathBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.pathBtn.DownBack = null;
             this.pathBtn.DownBaseColor = System.Drawing.Color.LightBlue;
-            this.pathBtn.Location = new System.Drawing.Point(433, 579);
+            this.pathBtn.Location = new System.Drawing.Point(500, 577);
             this.pathBtn.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.pathBtn.MouseBack = null;
             this.pathBtn.MouseBaseColor = System.Drawing.Color.LightBlue;
@@ -279,6 +289,94 @@
             this.pageNum.Size = new System.Drawing.Size(0, 17);
             this.pageNum.TabIndex = 17;
             // 
+            // tblSearch
+            // 
+            this.tblSearch.Controls.Add(this.tabKeyword);
+            this.tblSearch.Controls.Add(this.tabPage2);
+            this.tblSearch.Location = new System.Drawing.Point(7, 17);
+            this.tblSearch.Name = "tblSearch";
+            this.tblSearch.SelectedIndex = 0;
+            this.tblSearch.Size = new System.Drawing.Size(783, 67);
+            this.tblSearch.TabIndex = 18;
+            // 
+            // tabKeyword
+            // 
+            this.tabKeyword.Controls.Add(this.textBox1);
+            this.tabKeyword.Controls.Add(this.searchBtn);
+            this.tabKeyword.Location = new System.Drawing.Point(4, 26);
+            this.tabKeyword.Name = "tabKeyword";
+            this.tabKeyword.Padding = new System.Windows.Forms.Padding(3);
+            this.tabKeyword.Size = new System.Drawing.Size(775, 37);
+            this.tabKeyword.TabIndex = 0;
+            this.tabKeyword.Text = "歌曲搜索";
+            this.tabKeyword.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.txtSongListUrl);
+            this.tabPage2.Controls.Add(this.btnGetSongList);
+            this.tabPage2.Location = new System.Drawing.Point(4, 26);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(775, 37);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "歌单&专辑下载";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // txtSongListUrl
+            // 
+            this.txtSongListUrl.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtSongListUrl.Location = new System.Drawing.Point(7, 7);
+            this.txtSongListUrl.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSongListUrl.Name = "txtSongListUrl";
+            this.txtSongListUrl.Size = new System.Drawing.Size(452, 26);
+            this.txtSongListUrl.TabIndex = 10;
+            this.txtSongListUrl.Text = "https://music.163.com/#/album?id=34749138";
+            // 
+            // btnGetSongList
+            // 
+            this.btnGetSongList.BackColor = System.Drawing.Color.Transparent;
+            this.btnGetSongList.BaseColor = System.Drawing.Color.LightBlue;
+            this.btnGetSongList.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.btnGetSongList.DownBack = null;
+            this.btnGetSongList.DownBaseColor = System.Drawing.Color.Gainsboro;
+            this.btnGetSongList.GlowColor = System.Drawing.Color.LightBlue;
+            this.btnGetSongList.Location = new System.Drawing.Point(474, 8);
+            this.btnGetSongList.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.btnGetSongList.MouseBack = null;
+            this.btnGetSongList.MouseBaseColor = System.Drawing.Color.LightBlue;
+            this.btnGetSongList.Name = "btnGetSongList";
+            this.btnGetSongList.NormlBack = null;
+            this.btnGetSongList.RoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.btnGetSongList.Size = new System.Drawing.Size(107, 26);
+            this.btnGetSongList.TabIndex = 11;
+            this.btnGetSongList.Text = "获取歌曲列表";
+            this.btnGetSongList.UseVisualStyleBackColor = false;
+            this.btnGetSongList.Click += new System.EventHandler(this.btnGetSongList_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(7, 546);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 20);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "下载码率：";
+            // 
+            // cbRate
+            // 
+            this.cbRate.FormattingEnabled = true;
+            this.cbRate.Items.AddRange(new object[] {
+            "128",
+            "320",
+            "flac"});
+            this.cbRate.Location = new System.Drawing.Point(77, 541);
+            this.cbRate.Name = "cbRate";
+            this.cbRate.Size = new System.Drawing.Size(121, 25);
+            this.cbRate.TabIndex = 20;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -287,8 +385,9 @@
             this.CaptionHeight = 20;
             this.ClientSize = new System.Drawing.Size(800, 639);
             this.CloseBoxSize = new System.Drawing.Size(40, 20);
-            this.ControlBoxActive = System.Drawing.Color.SteelBlue;
-            this.ControlBoxDeactive = System.Drawing.Color.SkyBlue;
+            this.Controls.Add(this.cbRate);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.tblSearch);
             this.Controls.Add(this.pageNum);
             this.Controls.Add(this.nextPageBtn);
             this.Controls.Add(this.lastPageBtn);
@@ -296,10 +395,8 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.pathBtn);
             this.Controls.Add(this.downBtn);
-            this.Controls.Add(this.searchBtn);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ForeColor = System.Drawing.Color.Black;
@@ -318,6 +415,11 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.tblSearch.ResumeLayout(false);
+            this.tabKeyword.ResumeLayout(false);
+            this.tabKeyword.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,6 +448,13 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ColumnHeader source;
+        private System.Windows.Forms.TabControl tblSearch;
+        private System.Windows.Forms.TabPage tabKeyword;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TextBox txtSongListUrl;
+        private CCWin.SkinControl.SkinButton btnGetSongList;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cbRate;
     }
 }
 

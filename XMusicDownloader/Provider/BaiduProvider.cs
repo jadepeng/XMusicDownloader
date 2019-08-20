@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using XMusicDownloader.Domain;
 
@@ -71,6 +72,146 @@ namespace XMusicDownloader.Provider
         {
             return song.url;
 
+        }
+        // http://music.taihe.com/songlist/516288502
+        // http://music.taihe.com/album/182772
+
+        public bool Support(string url)
+        {
+            if (url == null)
+            {
+                return false;
+            }
+
+            if (!regex.IsMatch(url))
+            {
+                return false;
+            }
+
+            return url.StartsWith("http://music.taihe.com/songlist") || url.StartsWith("http://music.taihe.com/album");
+        }
+
+        Regex regex = new Regex("(\\d+)");
+
+        public List<Song> GetSongList(string url)
+        {
+            var isSongList = url.StartsWith("http://music.taihe.com/songlist");
+
+            var id = regex.Match(url).Groups[1].Value;
+
+            var result = new List<Song>();
+
+            if (isSongList)
+            {
+                GetSongListDetail(id, result);
+            }
+            else
+            {
+                GetAlbum(id, result);
+            }
+
+
+            return result;
+
+        }
+
+        private void GetSongListDetail(string id, List<Song> result)
+        {
+            var requestUrl = "https://v1.itooi.cn/baidu/songList?id=" + id;
+            var searchResult = HttpHelper.GET(requestUrl, DEFAULT_CONFIG);
+
+            var songList = JObject.Parse(searchResult)["data"];
+            var index = 1;
+
+            foreach (var songItem in songList)
+            {
+                var song = new Song
+                {
+                    id = (string)songItem["song_id"],
+                    name = (string)songItem["title"],
+                    album = (string)songItem["album_title"],
+                    //rate = 128,
+                    index = index++,
+                    //size = (double)songItem["FileSize"],
+                    source = Name,
+                    singer = (string)songItem["author"],
+                    duration = double.Parse((string)songItem["file_duration"])
+                };
+   
+
+                if (songItem["all_rate"] != null)
+                {
+                    if (songItem["all_rate"].ToString().Contains("flac"))
+                    {
+                        song.rate = 999;
+                    }
+                    else if (songItem["all_rate"].ToString().Contains("320"))
+                    {
+                        song.rate = 320;
+                    }
+                    else
+                    {
+                        song.rate = 128;
+                    }
+                   
+                }
+             
+                result.Add(song);
+
+            }
+        }
+
+
+
+        private void GetAlbum(string id, List<Song> result)
+        {
+            var requestUrl = "https://v1.itooi.cn/baidu/album?id=" + id;
+            var searchResult = HttpHelper.GET(requestUrl, DEFAULT_CONFIG);
+
+            var songList = JObject.Parse(searchResult)["data"]["songlist"];
+            var index = 1;
+
+            foreach (var songItem in songList)
+            {
+                var song = new Song
+                {
+                    id = (string)songItem["song_id"],
+                    name = (string)songItem["title"],
+                    album = (string)songItem["album_title"],
+                    //rate = 128,
+                    index = index++,
+                    //size = (double)songItem["FileSize"],
+                    source = Name,
+                    singer = (string)songItem["author"],
+                    duration = double.Parse((string)songItem["file_duration"])
+                };
+
+
+                if (songItem["all_rate"] != null)
+                {
+                    if (songItem["all_rate"].ToString().Contains("flac"))
+                    {
+                        song.rate = 999;
+                    }
+                    else if (songItem["all_rate"].ToString().Contains("320"))
+                    {
+                        song.rate = 320;
+                    }
+                    else
+                    {
+                        song.rate = 128;
+                    }
+
+                }
+
+                result.Add(song);
+
+            }
+        }
+
+        public string getDownloadUrl(string id, string rate)
+        {
+            return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/baidu/url?id=" + id + "&quality=" + rate, DEFAULT_CONFIG);
         }
 
     }
