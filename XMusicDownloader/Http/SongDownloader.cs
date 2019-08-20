@@ -92,8 +92,12 @@ namespace XMusicDownloader.Http
             songs.Remove(e);
             if (songs.Count < max_downloading_size)
             {
-                MergedSong song = queqes.Dequeue();
-                AddDownload(song);
+                if (queqes.Count > 0)
+                {
+                    MergedSong song = queqes.Dequeue();
+                    AddDownload(song);
+                }
+
             }
         }
 
