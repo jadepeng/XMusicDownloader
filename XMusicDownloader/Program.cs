@@ -16,6 +16,7 @@ namespace XMusicDownloader
         [STAThread]
         static void Main()
         {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12; //加上这一句
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
