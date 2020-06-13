@@ -2,12 +2,179 @@
 
 XMusicDownloader，一款 支持从百度、网易、qq和酷狗等音乐网站搜索并下载歌曲的程序。
 
-## 更新说明
-- 2019.8 V1.1.0 发布，支持歌单、专辑、歌手歌曲下载，支持无损下载
-  + 支持歌单、专辑、歌手歌曲下载（腾讯、网易）
-  + 支持flac无损、320,128 码率下载
-  + 截图
-  ![预览](./v1.1.png)
+开源音乐下载神器XMusicDownloader更新啦，新增网易、腾讯音乐歌单歌曲、歌手歌曲、专辑歌曲一键下载，同时支持下载flac无损音乐。
+
+## 功能
+
+V1.0 功能[开源工具软件XMusicDownloader——音乐下载神器](https://www.cnblogs.com/xiaoqi/p/xmusicdownloader.html)
+* 聚合搜索多家音乐网站
+* 支持音乐批量下载
+* 搜索结果综合排序
+* 可以编写Provider程序，支持其他音乐网站
+
+V1.1 新增功能支持歌单、专辑、歌手歌曲下载，支持无损下载
++ 支持歌单、专辑、歌手歌曲下载（腾讯、网易）
++ 支持flac无损、320,128 码率下载
+
+![V1.1截图](https://github.com/jadepeng/XMusicDownloader/raw/master/v1.1.png)
+
+
+## 扩展功能说明
+
+主要是调用了一个[[第三方接口](https://www.bzqll.com/2019/04/318.html) 实现歌单、歌手和专辑歌曲读取，以及获取真实下载地址。
+
+### 扩展provider接口，增加获取歌曲列表接口
+
+增加Support接口判断url地址是否是歌单地址，增加GetSongList用于获取歌单的歌曲列表，增加getDownloadUrl(string id, string rate)获取歌曲下载地址。
+
+```
+public interface IMusicProvider
+    {
+        string Name { get; }
+
+        string getDownloadUrl(Song song);
+        List<Song> SearchSongs(string keyword, int page, int pageSize);
+
+        // 歌单
+        bool Support(string url);
+        List<Song> GetSongList(string url);
+        /// <summary>
+        /// 获取下载地址
+        /// </summary>
+        /// <param name="id">歌曲id</param>
+        /// <param name="rate">码率，音质 如果最大音质获取出错则自动转其他音质	</param>
+        /// <returns>歌曲下载地址</returns>
+        string getDownloadUrl(string id, string rate);
+    }
+```
+
+### 实现provider
+
+以QQ为例：
+
+先判断是否是支持的url，主要是判断是否符合歌单、专辑、歌手的url格式。
+
+```
+        // 歌单： https://y.qq.com/n/yqq/playsquare/6924336223.html#stat=y_new.playlist.dissname
+        // 专辑 https://y.qq.com/n/yqq/album/00153q8l2vldMz.html
+        // 歌手 https://y.qq.com/n/yqq/singer/000CK5xN3yZDJt.html
+
+        Regex regex = new Regex("\\/(\\w+).html");
+        public bool Support(string url)
+        {
+            if (url == null)
+            {
+                return false;
+            }
+
+            if (!regex.IsMatch(url))
+            {
+                return false;
+            }
+
+            return url.StartsWith("https://y.qq.com/n/yqq/playsquare") || url.StartsWith("https://y.qq.com/n/yqq/album") || url.StartsWith("https://y.qq.com/n/yqq/singer");
+        } 
+
+```
+
+然后调用itooi.cn的api获取歌曲
+
+- 歌单接口 `https://v1.itooi.cn/tencent/songList?id=`
+- 歌手歌曲接口 `https://v1.itooi.cn/tencent/song/artist?id=`
+- 专辑歌曲接口 `https://v1.itooi.cn/tencent/album?id=`
+
+```
+ public List<Song> GetSongList(string url)
+        {
+            var isSongList = url.StartsWith("https://y.qq.com/n/yqq/playsquare");
+
+            var id = regex.Match(url).Groups[1].Value;
+
+            var result = new List<Song>();
+
+            if (isSongList)
+            {
+                GetSongListDetail(id, result);
+            }
+            else if (url.StartsWith("https://y.qq.com/n/yqq/albu"))
+            {
+                GetAlbum(id, result);
+            }
+            else
+            {
+                GetSingerSong(id, result);
+            }
+
+
+            return result;
+
+        }
+
+        private void GetSongListDetail(string id, List<Song> result)
+        {
+            var requestUrl = "https://v1.itooi.cn/tencent/songList?id=" + id;
+            var searchResult = HttpHelper.GET(requestUrl, DEFAULT_CONFIG);
+
+            var songList = JObject.Parse(searchResult)["data"][0]["songlist"];
+            var index = 1;
+
+            foreach (var songItem in songList)
+            {
+                var song = new Song
+                {
+                    id = (string)songItem["songmid"],
+                    name = (string)songItem["title"],
+                    album = (string)songItem["album"]["name"],
+                    rate = 320,
+                    index = index++,
+                    size = (double)songItem["file"]["size_320mp3"],
+                    source = Name,
+                    //singer = (string)songItem["author"],
+                    duration = (double)songItem["interval"]
+                };
+                if (song.size == 0d)
+                {
+                    song.size = (double)songItem["file"]["size_128mp3"];
+                    song.rate = 128;
+                }
+                song.singer = "";
+                foreach (var ar in songItem["singer"])
+                {
+                    song.singer += ar["name"] + " ";
+                }
+                result.Add(song);
+
+            }
+        }
+```
+
+最后获取下载地址，接口地址是`https://v1.itooi.cn/tencent/url?id=${id}&quality=[128,320,flac]`
+
+```
+ public string getDownloadUrl(string id, string rate)
+        {
+            return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/tencent/url?id=" + id + "&quality=" + rate, DEFAULT_CONFIG);
+        }
+```
+
+这里要检测下真实url，递归检测302跳转：
+
+```
+ public static string DetectLocationUrl(string url, HttpConfig config)
+        {
+            if (config == null) config = new HttpConfig();
+            using (HttpWebResponse response = GetResponse(url, "GET", null, config))
+            {
+                string detectUrl =  response.GetResponseHeader("Location");
+                if(detectUrl.Length == 0)
+                {
+                    return url;
+                }
+                // 递归获取
+                return DetectLocationUrl(detectUrl, config);
+            }
+        }
+```
 
 
 
