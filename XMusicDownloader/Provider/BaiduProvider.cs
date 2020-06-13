@@ -211,7 +211,7 @@ namespace XMusicDownloader.Provider
 
         public string getDownloadUrl(string id, string rate)
         {
-            return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/baidu/url?id=" + id + "&quality=" + rate, DEFAULT_CONFIG);
+          return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/baidu/url?id=" + id + "&quality=" + rate, DEFAULT_CONFIG);
         }
 
     }

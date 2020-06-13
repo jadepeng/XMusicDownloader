@@ -157,7 +157,7 @@ namespace XMusicDownloader.Http
                 {
                     try
                     {
-                        client.DownloadFile(musicProviders.getDownloadUrl(item, rate), target + "\\" + item.getFileName());
+                        client.DownloadFile(musicProviders.getDownloadUrl(item), target + "\\" + item.getFileName());
                         break;
 
                     }

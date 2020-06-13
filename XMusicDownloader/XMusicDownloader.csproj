@@ -106,12 +106,14 @@
     <Compile Include="KugouResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\MiguProvider.cs" />
     <Compile Include="Provider\NeteaseProvider.cs" />
     <Compile Include="Provider\KugouProvider.cs" />
     <Compile Include="Provider\IMusicProvider.cs" />
     <Compile Include="Provider\MusicProviders.cs" />
     <Compile Include="Provider\BaiduProvider.cs" />
     <Compile Include="Provider\QQProvider.cs" />
+    <Compile Include="Utils\AESHelper.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
