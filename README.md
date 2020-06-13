@@ -1,6 +1,6 @@
 # XMusicDownloader
 
-XMusicDownloader，一款 支持从百度、网易、qq和酷狗等音乐网站搜索并下载歌曲的程序。
+XMusicDownloader，一款 支持从百度、网易、qq和酷狗、咪咕音乐等音乐网站搜索并下载歌曲的程序。
 
 开源音乐下载神器XMusicDownloader更新啦，新增网易、腾讯音乐歌单歌曲、歌手歌曲、专辑歌曲一键下载，同时支持下载flac无损音乐。
 
