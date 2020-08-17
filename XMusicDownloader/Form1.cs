@@ -15,6 +15,7 @@ using XMusicDownloader.Provider;
 using XMusicDownloader.Domain;
 using XMusicDownloader.Http;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace XMusicDownloader
 {
@@ -27,12 +28,23 @@ namespace XMusicDownloader
         {
             InitializeComponent();
         }
+
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out string pszPath);
+
         string target = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\Download\\";
+        static readonly string configFile = "config.conf";
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox2.Text = target;
             this.cbRate.SelectedIndex = 2;
+            if (File.Exists(configFile))
+            {
+                // TODO
+                target = File.ReadAllText(configFile,Encoding.UTF8);
+            }
+            this.txtDownloadPath.Text = target;
         }
 
         //浏览
@@ -41,8 +53,9 @@ namespace XMusicDownloader
             FolderBrowserDialog ofd = new FolderBrowserDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                textBox2.Text = ofd.SelectedPath + "\\";
-                target = textBox2.Text;
+                txtDownloadPath.Text = ofd.SelectedPath + "\\";
+                target = txtDownloadPath.Text;
+                File.WriteAllText(configFile, target, Encoding.UTF8);
             }
         }
 
@@ -115,7 +128,7 @@ namespace XMusicDownloader
             List<ListViewItem> listViewItems = new List<ListViewItem>();
 
 
-            var songs = tblSearch.SelectedIndex == 0 ? provider.SearchSongs(textBox1.Text, page, 20) : provider.SearchSongsList(txtSongListUrl.Text);
+            var songs = tblSearch.SelectedIndex == 0 ? provider.SearchSongs(txtSearchBox.Text, page, 20) : provider.SearchSongsList(txtSongListUrl.Text);
 
             songs.ForEach(item =>
             {
@@ -280,6 +293,18 @@ namespace XMusicDownloader
             {
                 item.Checked = cbSelectAll.Checked;
             }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter){
+                searchBtn_Click(this, e);
+            }
+        }
+
+        private void txtSearchBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -57,20 +57,7 @@ namespace XMusicDownloader.Provider
 
         public string getDownloadUrl(Song song)
         {
-            var guid = new Random().Next(1000000000, 2000000000);
-
-            var key = JsonParser.Deserialize(HttpHelper.GET(string.Format("http://base.music.qq.com/fcgi-bin/fcg_musicexpress.fcg?guid={0}&format=json&json=3", guid), DEFAULT_CONFIG)).key;
-            foreach (var prefix in prefixes)
-            {
-
-                var musicUrl = string.Format("http://dl.stream.qqmusic.qq.com/{0}{1}.mp3?vkey={2}&guid={3}&fromtag=1", prefix, song.id, key, guid);
-                if (HttpHelper.GetUrlContentLength(musicUrl) > 0)
-                {
-                    return musicUrl;
-                }
-            }
-
-            return null;
+           return getMusicUrl(song.id,"320");
 
         }
 
@@ -247,6 +234,75 @@ namespace XMusicDownloader.Provider
         public string getDownloadUrl(string id, string rate)
         {
             return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/tencent/url?id=" + id + "&quality=" + rate, DEFAULT_CONFIG);
+        }
+
+        private string GetOggVkey(string songmid)
+        {
+            string param = "{\"comm\":{\"ct\":\"19\",\"cv\":\"1724\",\"patch\":\"118\",\"uin\":\"0\",\"wid\":\"0\"},\"queryvkey\":{\"method\":\"CgiGetEVkey\",\"module\":\"vkey.GetEVkeyServer\",\"param\":{\"checklimit\":0,\"ctx\":1,\"downloadfrom\":0,\"filename\":[\"O6M0003uw9dp2HcDl2.mgg\",\"O6M0"+ songmid+".mgg\"],\"guid\":\"CD2594E1E7AD35046B95E7E1482E074B\",\"musicfile\":[\"O6M0003uw9dp2HcDl2.mgg\",\"O6M0"+ songmid+".mgg\"],\"nettype\":\"\",\"referer\":\"y.qq.com\",\"scene\":0,\"songmid\":[\"003uw9dp2HcDl2\",\""+ songmid+"\"],\"songtype\":[1,1],\"uin\":\"1719982754\"}}}";
+            string result = HttpHelper.POST("https://u.y.qq.com/cgi-bin/musicu.fcg", param, DEFAULT_CONFIG);
+            return (string)JObject.Parse(result)["queryvkey"]["data"]["midurlinfo"][1]["purl"];
+        }
+
+        double getGuid()
+        {
+            return new Random().Next(1000000000, 2000000000);
+        }
+
+        string getPurl(string songmid)
+        {
+            string paramStr = "{\"req\":{\"module\":\"CDN.SrfCdnDispatchServer\",\"method\":\"GetCdnDispatch\",\"param\":{\"guid\":\""+ getGuid()+"\",\"calltype\":0,\"userip\":\"\"}},\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"guid\":\""+ getGuid()+"\",\"songmid\":[\""+songmid+"\"],\"songtype\":[0],\"uin\":\"2461958018\",\"loginflag\":1,\"platform\":\"20\"}},\"comm\":{\"uin\":2461958018,\"format\":\"json\",\"ct\":24,\"cv\":0}}";
+            string url = "https://u.y.qq.com/cgi-bin/musicu.fcg?g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&data=" + paramStr;
+            var response = HttpHelper.GET(url, DEFAULT_CONFIG);
+
+            JObject result = JObject.Parse(response);
+            string vkey =  (string)result["req_0"]["data"]["midurlinfo"][0]["purl"];
+            if(vkey.Length == 0)
+            {
+                return null;
+            }
+
+           return (string)result["req_0"]["data"]["sip"][0] + vkey;
+        }
+
+        public string getMusicUrl(string songmid, string size)
+        {
+
+            return getPurl(songmid);
+          
+            //string vkey = GetOggVkey(songmid);
+
+            //if(vkey.Length == 0)
+            //{
+            //    size = "128";
+            //}
+
+
+            //string[] prefix = {
+            //"http://124.89.197.14/amobile.music.tc.qq.com/",
+            //"http://124.89.197.15/amobile.music.tc.qq.com/",
+            //"http://isure.stream.qqmusic.qq.com/",
+            //"http://ws.stream.qqmusic.qq.com/",
+            //"http://183.240.120.28/amobile.music.tc.qq.com"
+            //};
+
+            ////    选择不同音质
+            //switch (size)
+            //{
+            //    case "flac":
+            //        return string.Format("{0}F000{1}.flac?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey={2}&uin=0&fromtag=53", prefix[1], songmid, vkey);
+            //    case "ape":
+            //        return string.Format("{0}A000{1}.ape?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey={2}&uin=0&fromtag=8", prefix[1], songmid, vkey);
+            //    case "320":
+            //        return string.Format("{0}M800{1}.mp3?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey={2}&uin=0&fromtag=30", prefix[1], songmid, vkey);
+            //    case "mgg":
+            //        return string.Format("{0}O6M0{1}.mgg?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey={2}&uin=0&fromtag=77", prefix[1], songmid, vkey);
+            //    case "128":
+            //        {
+
+            //        }
+            //    default:
+            //        return string.Format("{0}{1}", prefix[3], getPurl(songmid));
+            //}
         }
     }
 }

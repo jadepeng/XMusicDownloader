@@ -14,16 +14,28 @@ namespace XMusicDownloader.Provider
     {
         static HttpConfig DEFAULT_CONFIG = new HttpConfig
         {
-            Referer = "http://m.music.migu.cn/",
-
+            Referer = "http://music.migu.cn/",
+            UserAgent= "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36"
         };
 
         public string Name { get; } = "咪咕";
 
+        public static string UrlEncode(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            byte[] byStr = System.Text.Encoding.UTF8.GetBytes(str); //默认是System.Text.Encoding.Default.GetBytes(str)
+            for (int i = 0; i < byStr.Length; i++)
+            {
+                sb.Append(@"%" + Convert.ToString(byStr[i], 16));
+            }
+
+            return sb.ToString().ToUpper();
+        }
 
         public List<Song> SearchSongs(string keyword, int page, int pageSize)
         {
-            var searchResult = HttpHelper.GET(string.Format("http://m.music.migu.cn/migu/remoting/scr_search_tag?keyword={0}&pgc={1}&rows={2}&type=2", keyword, page, pageSize), DEFAULT_CONFIG);
+            string searchUrl = string.Format("https://m.music.migu.cn/migu/remoting/scr_search_tag?keyword={0}&pgc={1}&rows={2}&type=2", UrlEncode(keyword), page, pageSize);
+            var searchResult = HttpHelper.GET(searchUrl, DEFAULT_CONFIG);
             var result = new List<Song>();
             try
             {

@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtSearchBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtDownloadPath = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.searchBtn = new CCWin.SkinControl.SkinButton();
             this.downBtn = new CCWin.SkinControl.SkinButton();
@@ -65,15 +65,17 @@
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // textBox1
+            // txtSearchBox
             // 
-            this.textBox1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(4, 3);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(452, 26);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "周杰伦";
+            this.txtSearchBox.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtSearchBox.Location = new System.Drawing.Point(4, 3);
+            this.txtSearchBox.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSearchBox.Name = "txtSearchBox";
+            this.txtSearchBox.Size = new System.Drawing.Size(452, 26);
+            this.txtSearchBox.TabIndex = 0;
+            this.txtSearchBox.Text = "周杰伦";
+            this.txtSearchBox.TextChanged += new System.EventHandler(this.txtSearchBox_TextChanged);
+            this.txtSearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // label1
             // 
@@ -87,14 +89,14 @@
             this.label1.Text = "下载到：";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // textBox2
+            // txtDownloadPath
             // 
-            this.textBox2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox2.Location = new System.Drawing.Point(77, 577);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(417, 26);
-            this.textBox2.TabIndex = 4;
+            this.txtDownloadPath.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtDownloadPath.Location = new System.Drawing.Point(77, 577);
+            this.txtDownloadPath.Margin = new System.Windows.Forms.Padding(4);
+            this.txtDownloadPath.Name = "txtDownloadPath";
+            this.txtDownloadPath.Size = new System.Drawing.Size(417, 26);
+            this.txtDownloadPath.TabIndex = 4;
             // 
             // timer1
             // 
@@ -304,7 +306,7 @@
             // 
             // tabKeyword
             // 
-            this.tabKeyword.Controls.Add(this.textBox1);
+            this.tabKeyword.Controls.Add(this.txtSearchBox);
             this.tabKeyword.Controls.Add(this.searchBtn);
             this.tabKeyword.Location = new System.Drawing.Point(4, 26);
             this.tabKeyword.Name = "tabKeyword";
@@ -420,7 +422,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.pathBtn);
             this.Controls.Add(this.downBtn);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.txtDownloadPath);
             this.Controls.Add(this.label1);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -453,9 +455,9 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtSearchBox;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtDownloadPath;
         private System.Windows.Forms.Timer timer1;
         private CCWin.SkinControl.SkinButton searchBtn;
         private CCWin.SkinControl.SkinButton downBtn;
