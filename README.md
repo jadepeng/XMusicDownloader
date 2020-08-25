@@ -18,6 +18,14 @@ V1.1 新增功能支持歌单、专辑、歌手歌曲下载，支持无损下载
 
 ![V1.1截图](https://github.com/jadepeng/XMusicDownloader/raw/master/v1.1.png)
 
+## 关联软件
+
+### 网易云音乐歌单收费歌曲补全工具
+
+![界面](https://gitee.com/jadepeng/pic/raw/master/pic/2020/8/25/1598352954630.png)
+
+原理以及使用方法见： https://www.cnblogs.com/xiaoqi/p/music163tool.html
+
 
 ## 扩展功能说明
 
