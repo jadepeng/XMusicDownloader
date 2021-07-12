@@ -29,7 +29,7 @@ V1.1 新增功能支持歌单、专辑、歌手歌曲下载，支持无损下载
 
 ## 扩展功能说明
 
-主要是调用了一个[[第三方接口](https://www.bzqll.com/2019/04/318.html) 实现歌单、歌手和专辑歌曲读取，以及获取真实下载地址。
+主要是调用了一个[第三方接口](https://www.bzqll.com/2019/04/318.html)实现歌单、歌手和专辑歌曲读取，以及获取真实下载地址。
 
 ### 扩展provider接口，增加获取歌曲列表接口
 
@@ -523,5 +523,5 @@ public class SongItemDownloader
 
 ## 参考
 
-- 程序界面，使用了https://github.com/Gsangu/KugouDownloader代码
+- 程序界面，使用了 https://github.com/Gsangu/KugouDownloader 代码
 - 搜索和下载方案参考 https://github.com/0xHJK/music-dl
