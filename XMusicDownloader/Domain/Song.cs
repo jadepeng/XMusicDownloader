@@ -29,6 +29,11 @@ namespace XMusicDownloader.Domain
         {
             return singer.Replace(" ", "") + name.Replace(" ", "");
         }
+
+        public bool HasValidUrl()
+        {
+            return url != null && url.StartsWith("http"); 
+        }
     }
 
     public class MergedSong

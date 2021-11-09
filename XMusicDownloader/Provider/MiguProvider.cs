@@ -14,7 +14,7 @@ namespace XMusicDownloader.Provider
     {
         static HttpConfig DEFAULT_CONFIG = new HttpConfig
         {
-            Referer = "http://music.migu.cn/",
+            Referer = "https://m.music.migu.cn",
             UserAgent= "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36"
         };
 
@@ -59,7 +59,10 @@ namespace XMusicDownloader.Provider
                         duration = 0
                     };
 
-                    result.Add(song);
+                    if (song.HasValidUrl())
+                    {
+                        result.Add(song);
+                    }
                 }
 
             }

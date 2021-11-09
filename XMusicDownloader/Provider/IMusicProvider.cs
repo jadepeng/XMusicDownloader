@@ -8,6 +8,7 @@ namespace XMusicDownloader.Provider
         string Name { get; }
 
         string getDownloadUrl(Song song);
+
         List<Song> SearchSongs(string keyword, int page, int pageSize);
 
         // 歌单

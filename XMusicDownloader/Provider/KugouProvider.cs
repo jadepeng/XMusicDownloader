@@ -46,10 +46,17 @@ namespace XMusicDownloader.Provider
                         duration = (double)songItem["Duration"]
                     };
 
+                    song.url = getDownloadUrl(song.id);
+
+                    if (song.url == null)
+                    {
+                        continue;
+                    }
+
                     result.Add(song);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -59,10 +66,9 @@ namespace XMusicDownloader.Provider
 
         public string getDownloadUrl(Song song)
         {
-            var urlInfO = JsonParser.Deserialize(HttpHelper.GET(string.Format("http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash={0}", song.id), DEFAULT_CONFIG));
-            return urlInfO.url;
-
+            return song.url;
         }
+
 
         public bool Support(string url)
         {
@@ -77,6 +83,13 @@ namespace XMusicDownloader.Provider
         public string getDownloadUrl(string id, string rate)
         {
             return HttpHelper.DetectLocationUrl("https://v1.itooi.cn/kugou/url?id=" + id + "&quality=" + rate,DEFAULT_CONFIG);
+        }
+
+        private string getDownloadUrl(string songId)
+        {
+            var urlInfO = JsonParser.Deserialize(HttpHelper.GET(string.Format("http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash={0}", songId), DEFAULT_CONFIG));
+            return urlInfO.url;
+
         }
 
     }

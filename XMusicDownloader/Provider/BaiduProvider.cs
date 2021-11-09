@@ -43,29 +43,37 @@ namespace XMusicDownloader.Provider
                 var index = 1;
                 foreach (var songItem in songList)
                 {
-                    var song = new Song
-                    {
-                        id = (string)songItem["queryId"],
-                        name = (string)songItem["songName"],
-                        singer = (string)songItem["artistName"],
-                        album = (string)songItem["albumName"],
-                        rate = 128,
-                        index = index++,
-                        size = (double)songItem["size"],
-                        source = Name,
-                        url = (string)songItem["songLink"],
-                        duration = (double)songItem["time"]
-                    };
+                    Song song = ParseSong(ref index, songItem);
 
-                    result.Add(song);
+                    if (song.HasValidUrl())
+                    {
+                        result.Add(song);
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
             return result;
 
+        }
+
+        private Song ParseSong(ref int index, JToken songItem)
+        {
+            return new Song
+            {
+                id = (string)songItem["queryId"],
+                name = (string)songItem["songName"],
+                singer = (string)songItem["artistName"],
+                album = (string)songItem["albumName"],
+                rate = 128,
+                index = index++,
+                size = (double)songItem["size"],
+                source = Name,
+                url = (string)songItem["songLink"],
+                duration = (double)songItem["time"]
+            };
         }
 
         public string getDownloadUrl(Song song)

@@ -43,6 +43,14 @@ namespace XMusicDownloader.Provider
                     index = index++,
                     duration = songItem["interval"]
                 };
+
+                song.url = getPurl(song.id);
+
+                if (!song.HasValidUrl())
+                {
+                    continue;
+                }
+
                 song.singer = "";
                 foreach (var ar in songItem["singer"])
                 {
@@ -213,6 +221,7 @@ namespace XMusicDownloader.Provider
                     duration = (double)songItem["interval"]
                 };
 
+
                 if (song.size == 0d)
                 {
                     song.size = (double)songItem["size128"];
@@ -250,18 +259,25 @@ namespace XMusicDownloader.Provider
 
         string getPurl(string songmid)
         {
-            string paramStr = "{\"req\":{\"module\":\"CDN.SrfCdnDispatchServer\",\"method\":\"GetCdnDispatch\",\"param\":{\"guid\":\""+ getGuid()+"\",\"calltype\":0,\"userip\":\"\"}},\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"guid\":\""+ getGuid()+"\",\"songmid\":[\""+songmid+"\"],\"songtype\":[0],\"uin\":\"2461958018\",\"loginflag\":1,\"platform\":\"20\"}},\"comm\":{\"uin\":2461958018,\"format\":\"json\",\"ct\":24,\"cv\":0}}";
-            string url = "https://u.y.qq.com/cgi-bin/musicu.fcg?g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&data=" + paramStr;
-            var response = HttpHelper.GET(url, DEFAULT_CONFIG);
+            try
+            {
+                string paramStr = "{\"req\":{\"module\":\"CDN.SrfCdnDispatchServer\",\"method\":\"GetCdnDispatch\",\"param\":{\"guid\":\"" + getGuid() + "\",\"calltype\":0,\"userip\":\"\"}},\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"guid\":\"" + getGuid() + "\",\"songmid\":[\"" + songmid + "\"],\"songtype\":[0],\"uin\":\"2461958018\",\"loginflag\":1,\"platform\":\"20\"}},\"comm\":{\"uin\":2461958018,\"format\":\"json\",\"ct\":24,\"cv\":0}}";
+                string url = "https://u.y.qq.com/cgi-bin/musicu.fcg?g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&data=" + paramStr;
+                var response = HttpHelper.GET(url, DEFAULT_CONFIG);
 
-            JObject result = JObject.Parse(response);
-            string vkey =  (string)result["req_0"]["data"]["midurlinfo"][0]["purl"];
-            if(vkey.Length == 0)
+                JObject result = JObject.Parse(response);
+                string vkey = (string)result["req_0"]["data"]["midurlinfo"][0]["purl"];
+                if (vkey.Length == 0)
+                {
+                    return null;
+                }
+
+                return (string)result["req_0"]["data"]["sip"][0] + vkey;
+            }
+            catch
             {
                 return null;
             }
-
-           return (string)result["req_0"]["data"]["sip"][0] + vkey;
         }
 
         public string getMusicUrl(string songmid, string size)
